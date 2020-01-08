@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>Play Box Critters</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <!-- Facebook Card -->
+    <meta property="og:title" content="Box Critters" />
+    <meta property="og:url" content="https://boxcritters.com" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Box Critters is a New Virtual World by RocketSnail! The idea is to create new world, inspired by Club Penguin. My goal is to make this world widely accessible for browser, mobile and desktop." />
+    <meta property="og:image" content="http://boxcritters.com/images/BoxCritters_400x400.jpg" />
+    <meta property="og:image:width" content="400" />
+    <meta property="og:image:height" content="400" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:title" content="Box Critters">
+    <meta name="twitter:description" content="Box Critters is a New Virtual World by RocketSnail! The idea is to create new world, inspired by Club Penguin.">
+    <meta name="twitter:image" content="http://boxcritters.com/images/BoxCritters_400x400.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@boxcritters">
+
+    <!-- Facebook Pixel Code -->
+    <script>
+        ! function(f, b, e, v, n, t, s) {
+            if (f.fbq) return;
+            n = f.fbq = function() {
+                n.callMethod ?
+                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+            };
+            if (!f._fbq) f._fbq = n;
+            n.push = n;
+            n.loaded = !0;
+            n.version = '2.0';
+            n.queue = [];
+            t = b.createElement(e);
+            t.async = !0;
+            t.src = v;
+            s = b.getElementsByTagName(e)[0];
+            s.parentNode.insertBefore(t, s)
+        }(window, document, 'script',
+            'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '311104706251822');
+        fbq('track', 'PageView');
+
+    </script>
+    <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=124769524847795&ev=PageView&noscript=1" /></noscript>
+    <!-- End Facebook Pixel Code -->
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-133725203-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+        gtag('config', 'UA-133725203-1');
+
+    </script>
+    <!-- End -->
+
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=Luckiest+Guy" rel="stylesheet">
+
+    <link rel="stylesheet" href="../styles/main.css">
+
+    <style>
+        .hide {
+            display: none
+        }
+
+        .client .form-control {
+            padding: 0;
+            font-size: 16px;
+            height: auto;
+        }
+
+        .darkmode {
+            background-color: black;
+        }
+
+        .btn-facebook {
+            background-color: #3b5998;
+        }
+
+        .btn-twitter {
+            background-color: #1da1f2;
+        }
+
+        .btn-youtube {
+            background-color: #c4302b;
+        }
+
+        .btn-instagram {
+            background-color: #bc2a8d;
+        }
+
+        @media (max-width: 767.98px) {
+            body {
+                padding-top: 0;
+            }
+
+            .client .col {
+                padding: 0;
+            }
+
+        }
+
+    </style>
+
+    <!-- PlayFab -->
+    <script type="text/javascript" src="https://download.playfab.com/PlayFabClientApi.js"></script>
+
+</head>
+
+<body>
+
+    <!-- Modal -->
+    <div id="modal" class="modal" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header"></div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button id="buttonLogin" type="button" class="btn btn-secondary">Reconnect</button>
+                    <!--                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Client -->
+    <div class="client container-fluid">
+        <div class="row justify-content-center">
+            <div class="col col-lg-10 col-xl-8">
+                <div>
+                    <canvas id="stage" width="850" height="480"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col col-lg-8">
+                <div class="input-group">
+                    <input id="inputMessage" type="text" class="form-control px-2" maxlength="60">
+                    <span class="input-group-btn"><button class="btn btn-primary chat-btn">Send</button></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="menu container pt-4">
+        <div class="row justify-content-center">
+            <div class="col-3">
+                <button class="btn btn-link" onclick="world.logout()">Log out</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer container mb-4">
+        <div class="row justify-content-center">
+            <div class="col-8 col-md-6">
+                <p class="mt-5 mb-3 text-muted text-center">Created by <a href="https://rocketsnail.com" target=”_blank”>RocketSnail</a> and powered by the amazing team at <a href="https://screenzilla.com" target=”_blank”>Screenzilla Entertainment</a></p>
+                <p class="mt-3 mb-3 text-muted text-center small"><a href="https://screenzilla.com/terms-conditions/" target=”_blank”>Terms</a> | <a href="https://screenzilla.com/privacy-policy/" target=”_blank”>Privacy</a></p>
+                <p class="mt-1 mb-3 text-muted text-center small">&copy;2019 RocketSnail Games Ltd. Box Critters is a trademark of RocketSnail Games Ltd</p>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <!-- Frameworks -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+
+    <!-- Box Critters -->
+    <script src="../lib/client155.min.js"></script>
+
+    <script>
+        var socket, world, socketPath;
+
+        if (location.hostname === "boxcritters.com") {
+            socketPath = 'https://boxcritters.herokuapp.com';
+        }
+
+        socket = io(socketPath, {
+            autoConnect: false,
+            transports: ['websocket']
+        });
+
+        var world = new World('stage', socket);
+
+        var myPlayer = {
+            playerId: sessionStorage.getItem('playerId'),
+            sessionTicket: sessionStorage.getItem('sessionTicket'),
+            isNewPlayer: sessionStorage.getItem('isNewPlayer'),
+        }
+
+        if (myPlayer.sessionTicket) {
+
+            var queue = new createjs.LoadQueue(true);
+            queue.loadManifest([{
+                    id: 'critters',
+                    src: '/media/critters11.json'
+                },
+                {
+                    id: 'symbols',
+                    src: '/media/symbols/symbols.json'
+                },
+                {
+                    id: 'effects',
+                    src: '/media/effects/effects2.json'
+                },
+                {
+                    id: 'items',
+                    src: '/media/items5.json'
+                }
+            ]);
+            queue.on("complete", function(event) {
+
+                world.updateData('critters', queue.getResult('critters'));
+                world.updateData('symbols', queue.getResult('symbols'));
+                world.updateData('effects', queue.getResult('effects'));
+                world.updateData('items', queue.getResult('items'));
+
+                world.updateData('settings', {
+                    lobby: 'tavern'
+                });
+
+                world.login(myPlayer.sessionTicket);
+
+                socket.on('login', function(data) {
+                    if (data.error) {
+                        document.location.href = '/';
+                    } else {
+                        $(document).unbind('keypress');
+                        $(document).keypress(handleKeypress);
+                        $('.chat-btn').click(sendMessage);
+                    }
+                });
+
+                socket.on('disconnect', function() {
+                    console.log('disconnected');
+                    $('#modal').modal({
+                        backdrop: 'static'
+                    });
+                    $('#modal').modal('show');
+                    $('#modal .modal-body').text('Disconnect');
+                    $('#buttonLogin').click(function() {
+                        document.location.reload();
+                    });
+                });
+
+            });
+
+        } else {
+            document.location.href = '/';
+        }
+
+    </script>
+
+    <script>
+        var isDarkmode = false;
+
+        function toggleDarkmode() {
+            if (isDarkmode) {
+                $('body').removeClass('darkmode');
+                isDarkmode = false;
+            } else {
+                $('body').addClass('darkmode');
+                isDarkmode = true;
+            }
+        }
+
+    </script>
+
+    <script>
+        // When enter/return is pressed send message
+        function handleKeypress(e) {
+            if (e.which == 13) {
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            var message = $('#inputMessage').val();
+            if (message.length > 0) {
+                world.sendMessage(message);
+                $('#inputMessage').val('');
+                $('#inputMessage').focus();
+            } else {
+                $('#inputMessage').focus();
+            }
+        }
+
+    </script>
+
+    <script>
+        // Fit stage to container
+        var stageWidth = 850;
+        var stageHeight = 480;
+
+        window.onresize = function() {
+            var body = $('#stage').parent();
+            var width = body.width();
+            $('#stage').width(width).height(width * .56);
+            if (width < 768) {
+                //world.settings.view = 'small';
+                world.settings.view = 'wide';
+            } else {
+                world.settings.view = 'wide';
+            }
+        }
+        window.onresize();
+
+    </script>
+
+    <script>
+        world.on('M', function(crumb) {
+            if (crumb.n == 'RocketSnail') {
+                console.info('%c💬 ' + crumb.n + ': ' + crumb.m, 'font-size:medium; color:green');
+            } else {
+                console.info('%c💬 ' + crumb.n + ': ' + crumb.m, 'font-size:medium');
+            }
+        });
+
+    </script>
+
+</body>
+
+</html>
